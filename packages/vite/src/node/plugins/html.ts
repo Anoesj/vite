@@ -378,8 +378,11 @@ export function buildHtmlPlugin(config: ResolvedConfig): Plugin {
               inlineModuleIndex,
               styleNode.content
             )
-            js += `\nimport "${id}?html-proxy&index=${inlineModuleIndex}.css"`
-            shouldRemove = true
+            // preserve style tag when using `vite-preserve` attribute
+            if (!node.props.some((p) => p.name === 'vite-preserve')) {
+              js += `\nimport "${id}?html-proxy&index=${inlineModuleIndex}.css"`
+              shouldRemove = true
+            }
           }
 
           if (shouldRemove) {
